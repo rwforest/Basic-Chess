@@ -5,14 +5,13 @@ import { Chessboard } from "react-chessboard";
 // --- API Helper Function ---
 async function fetchMoveFromAPI(fen: string, pgnMovetext: string, token: string | null) {
   // Renamed pgn to pgnMovetext for clarity based on your requirement
-  const API_URL = `/best_move?board_state=${encodeURIComponent(fen)}&pgn=${encodeURIComponent(pgnMovetext)}`;
+
+  const API_URL = `/api/best_move?board_state=${encodeURIComponent(fen)}&pgn=${encodeURIComponent(pgnMovetext)}`;
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
   };
 
-  token = 'eyJraWQiOiIyMDdhN2JlMDhmMjBjNDBkNmUwZmU2ZWY3MzY5YTgxNjMxYjFlNDliMTg1M2VlNWFjMDhmM2NmNzlmZWUxNWYyIiwidHlwIjoiYXQrand0IiwiYWxnIjoiUlMyNTYifQ.eyJjbGllbnRfaWQiOiJmZDYyNGM0MC1kNWM4LTQ0MDUtYjE0Mi1lZWY3MTE3YzVmYWEiLCJzY29wZSI6Im9mZmxpbmVfYWNjZXNzIGVtYWlsIGlhbS5jdXJyZW50LXVzZXI6cmVhZCBvcGVuaWQgaWFtLmFjY2Vzcy1jb250cm9sOnJlYWQgcHJvZmlsZSIsImlzcyI6Imh0dHBzOi8vYWRiLTgzMzMzMzAyODI4NTkzOTMuMTMuYXp1cmVkYXRhYnJpY2tzLm5ldC9vaWRjIiwiYXVkIjoiODMzMzMzMDI4Mjg1OTM5MyIsInN1YiI6Imphc29uLnlpcEB0cmVkZW5jZS5jb20iLCJpYXQiOjE3NDcyMDk1MjcsImV4cCI6MTc0NzIxMzEyNywianRpIjoiYjFmMDc5MzMtMGJiNC00OTQ2LTk5ZTUtN2M1MTJkODNkNDZiIn0.D-3n94BUkIyfTpYNMfoz-dhUH-Tvx6RmYSlcrZuXI6nXoDUWxPzIVaY3RYH8DvGc7eLkm3dyBYMqZw_lNfzp8fMjOfsrGKOoeMh3y95JlABDdYNeF8dFC0uPVUyotLlRfXlUON5iTLBcqlrQZ4HiqhYxo1TAb9NMNC490ZnTGPWf7uZN-BqQmT0t4gABVLNDqSkrYoMX3s_zaIna0bea5K9rmkmryjCyMXgyq3y9HaUx1nye8BTpPCHDmg8TpMAAhIXE_h0ciL7wvJdI-B2ZiIaoDpgKM3ug-wa-4ryqvSE95sNQGhL8xU-FLpXa4eJV5W6c68hWOse7PQlBLAKxDA';
-  // token = 'eyJraWQiOiIyMDdhN2JlMDhmMjBjNDBkNmUwZmU2ZWY3MzY5YTgxNjMxYjFlNDliMTg1M2VlNWFjMDhmM2NmNzlmZWUxNWYyIiwidHlwIjoiYXQrand0IiwiYWxnIjoiUlMyNTYifQ.eyJjbGllbnRfaWQiOiJmYmM2MTNhNC1jYjExLTQ0ZDAtODE2Mi02NmM0OTBhYTViMTMiLCJzY29wZSI6Im9mZmxpbmVfYWNjZXNzIGVtYWlsIGlhbS5jdXJyZW50LXVzZXI6cmVhZCBvcGVuaWQgaWFtLmFjY2Vzcy1jb250cm9sOnJlYWQgcHJvZmlsZSIsImlzcyI6Imh0dHBzOi8vYWRiLTgzMzMzMzAyODI4NTkzOTMuMTMuYXp1cmVkYXRhYnJpY2tzLm5ldC9vaWRjIiwiYXVkIjoiODMzMzMzMDI4Mjg1OTM5MyIsInN1YiI6Imphc29uLnlpcEB0cmVkZW5jZS5jb20iLCJpYXQiOjE3NDcyMTE4MzEsImV4cCI6MTc0NzIxNTQzMSwianRpIjoiZjdhYTlmZGQtYWExYi00OTNhLTllNGYtNWY3ODg0ZmUzZTU2In0.hRaMZCpG7tV4q9BEz9qZVfqqq9nPCJd7D7LXx_L2oDNYuqXS-zYuPajpl0PbtrkltC0lqFhmfPFE4bvj4hD8_sWrvy568AkC99Of7i5sRdbA6M_zoWWIPIgKS3sSnLmNvbe-VubjPURbiNbd7bTnpluK5ebPcBuR_6yahVz0LDpGwYWiwPuIVePg2xWwPlLxQURHxtEBFzWnDOLDKxlfzUaOeBibDM4HRrpTARC-J0d5AFHgPl-hObbVcJqu9XnMoT57E00oBVMur3VXfAC-kzUTOqr5kWjq6vhHunsH2TCcMfW9br_HTWyN0YRACEDlBQB3g3jlePtUcf_ueta6IQ'
-  // ?board_state=rn3rk1/pp1qb1pp/2p2n2/3p1pB1/3P4/1QP2N2/PP1N1PPP/R4RK1 w - - 2 12
+  token = '';
 
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
@@ -43,6 +42,9 @@ export default function PlayApiMoveEngine() {
   const [game, setGame] = useState(new Chess());
   const [isThinking, setIsThinking] = useState(false);
   const [userToken, setUserToken] = useState<string | null>(null);
+
+  // New state to trigger engine move and pass necessary data
+  const [engineMoveTrigger, setEngineMoveTrigger] = useState<{ fen: string; pgn: string } | null>(null);
 
   useEffect(() => {
     const tokenElement = document.getElementById('user_token') as HTMLInputElement | null;
@@ -81,34 +83,55 @@ export default function PlayApiMoveEngine() {
     return oneLineMovetext.trim();
   };
 
-  async function makeEngineMove() {
-    if (game.isGameOver() || game.isDraw()) return;
+ // useEffect to handle making the engine's move
+ useEffect(() => {
+  if (engineMoveTrigger) {
+    const { fen, pgn } = engineMoveTrigger;
 
-    setIsThinking(true);
-    console.log("Engine is thinking. Current FEN for API:", game.fen());
-
-    // Use your toPgn function to get the movetext
-    const moveHistoryArray = game.history();
-    const pgnMovetextForAPI = toPgn(moveHistoryArray);
-    console.log("Sending movetext to API:", pgnMovetextForAPI);
-
-    const engineMoveSAN = await fetchMoveFromAPI(game.fen(), pgnMovetextForAPI, userToken);
-    setIsThinking(false);
-
-    if (engineMoveSAN) {
-      console.log("Engine move received from API:", engineMoveSAN);
-      safeGameMutate((g) => {
-        const result = g.move(engineMoveSAN);
-        if (result === null) {
-          console.error("API returned an invalid move:", engineMoveSAN, "for FEN:", g.fen());
-          window.alert(`Engine tried an invalid move: ${engineMoveSAN}. This could be an API or engine logic issue.`);
-        }
-      });
-    } else {
-      console.error("Engine failed to get a move from the API.");
-      window.alert("Engine failed to get a move. It might be an API issue or no legal moves available.");
+    // Double-check conditions based on the FEN that triggered the move
+    const tempGameForCheck = new Chess(fen);
+    if (tempGameForCheck.isGameOver() || tempGameForCheck.isDraw() || tempGameForCheck.turn() === 'w') {
+      console.log("[useEffect-EngineMove] Conditions not met for engine move based on trigger FEN (game over, draw, or not engine's turn). FEN:", fen);
+      setEngineMoveTrigger(null); // Reset trigger
+      return;
     }
+
+    const performApiCall = async () => {
+      console.log("[useEffect-EngineMove] Calling API with FEN:", fen, "PGN:", pgn);
+      setIsThinking(true);
+      const engineMoveSAN = await fetchMoveFromAPI(fen, pgn, userToken);
+      setIsThinking(false);
+
+      if (engineMoveSAN) {
+        console.log("[useEffect-EngineMove] Engine move received:", engineMoveSAN);
+        // safeGameMutate uses setGame, which correctly bases its update
+        // on the 'currentGame' state passed by React, which will be up-to-date.
+        safeGameMutate((g) => {
+          // It's good practice to ensure 'g' is in the expected state or use 'fen' if there's a mismatch risk.
+          // However, since this effect runs after the player's move has set 'game', 'g.fen()' should typically match 'fen'.
+          if (g.fen() !== fen) {
+              console.warn(`[useEffect-EngineMove] Discrepancy: Current game FEN (${g.fen()}) differs from trigger FEN (${fen}). Applying to current game state.`);
+              // You might decide to load 'fen' into 'g' if this is a concern: g.load(fen);
+          }
+          const result = g.move(engineMoveSAN);
+          if (result === null) {
+            console.error("API returned an invalid move (useEffect):", engineMoveSAN, "for FEN:", g.fen()); // g.fen() is after the attempted move
+            window.alert(`Engine tried an invalid move: ${engineMoveSAN}. The board state was FEN: ${fen}`);
+          }
+        });
+      } else {
+        console.error("[useEffect-EngineMove] Engine failed to get a move from the API.");
+        window.alert("Engine failed to get a move. API issue or no legal moves.");
+      }
+      setEngineMoveTrigger(null); // Reset the trigger
+    };
+
+    // Optional: If you still want a slight delay for the "thinking" feel
+    const timerId = setTimeout(performApiCall, 100); // A small delay
+    return () => clearTimeout(timerId); // Cleanup timeout if component unmounts or trigger changes
   }
+}, [engineMoveTrigger, userToken]); // Add fetchMoveFromAPI if it's not stable / defined outside
+
 
   function onDrop(sourceSquare: string, targetSquare: string): boolean {
     if (isThinking || game.turn() !== 'w') {
@@ -141,7 +164,11 @@ export default function PlayApiMoveEngine() {
 
     // Check game status on the *updated* game state.
     if (!gameAfterPlayerMove.isGameOver() && !gameAfterPlayerMove.isDraw()) {
-      setTimeout(makeEngineMove, 500);
+      // Instead of setTimeout, set the state to trigger the useEffect hook
+      setEngineMoveTrigger({
+        fen: gameAfterPlayerMove.fen(),
+        pgn: toPgn(gameAfterPlayerMove.history()),
+      });
     }
 
     return true;
